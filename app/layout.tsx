@@ -1,27 +1,46 @@
 import type { Metadata } from "next";
-import { Exo_2, Geist } from "next/font/google";
+import { Poppins } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
+import Navbar from "./_shared/Navbar";
+import Footer from "./_shared/Footer";
+import { ThemeProvider } from "@/components/theme-provider";
 
-const geist = Geist({subsets:['latin'],variable:'--font-sans'});
-
-const exo2 = Exo_2({
-  variable: "--font-exo2",
+const poppins = Poppins({
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
+  variable: "--font-poppins",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "Extroverts",
-  description: "Party•Hangout•Vibe",
+  title: "Extroverts — Party • Hangout • Vibe",
+  description: "Discover genuine hangouts, meet like-minded people, and experience real-world vibes.",
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
   return (
     <html
       lang="en"
-      className={cn("h-full", "antialiased", exo2.className, "font-sans", geist.variable)}
+      suppressHydrationWarning
+      className={cn("h-full antialiased", poppins.className, poppins.variable)}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col font-sans">
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <Navbar />
+          {children}
+          <Footer />
+        </ThemeProvider>
+      </body>
     </html>
   );
 }

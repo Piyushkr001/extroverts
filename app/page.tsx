@@ -1,10 +1,5 @@
-import Image from "next/image";
+import LandingScreen from "./_shared/LandingScreen";
 
 export default function Home() {
-  return (
-    <div>
-      <h1>Extroverts</h1>
-      <p>Party•Hangout•Vibe</p>
-    </div>
-  );
+  return <LandingScreen />;
 }
