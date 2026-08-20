@@ -28,6 +28,7 @@ import { AVAILABILITY_OPTIONS } from "@/lib/data/locations";
 interface StepFourSocialProps {
   initialData: SignupFormData;
   isSubmitting: boolean;
+  demoMode?: boolean;
   simulateFailure: boolean;
   onToggleSimulateFailure: () => void;
   onFinalSubmit: (data: StepFourSocialInput) => void;
@@ -37,6 +38,7 @@ interface StepFourSocialProps {
 export function StepFourSocial({
   initialData,
   isSubmitting,
+  demoMode = false,
   simulateFailure,
   onToggleSimulateFailure,
   onFinalSubmit,
@@ -208,25 +210,27 @@ export function StepFourSocial({
         </Button>
       </form>
 
-      {/* Evaluator Simulation Control (Failure State Testing) */}
-      <div className="mt-5 flex items-center justify-between border-t border-black/5 pt-3.5 text-[11px] text-zinc-400 dark:border-white/10">
-        <span className="flex items-center gap-1">
-          <Bug className="h-3 w-3" />
-          <span>Simulate Submission Failure:</span>
-        </span>
-        <button
-          type="button"
-          onClick={onToggleSimulateFailure}
-          className={cn(
-            "rounded-md px-2 py-0.5 text-[10px] font-bold uppercase transition-colors cursor-pointer",
-            simulateFailure
-              ? "bg-red-500 text-white"
-              : "bg-zinc-200 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300"
-          )}
-        >
-          {simulateFailure ? "ON (Failing)" : "OFF (Normal)"}
-        </button>
-      </div>
+      {/* Evaluator Simulation Control (Only in demo mode /signup?demo=true) */}
+      {demoMode && (
+        <div className="mt-5 flex items-center justify-between border-t border-black/5 pt-3.5 text-[11px] text-zinc-400 dark:border-white/10">
+          <span className="flex items-center gap-1">
+            <Bug className="h-3 w-3" />
+            <span>Demo Mode — Simulate Submission Failure:</span>
+          </span>
+          <button
+            type="button"
+            onClick={onToggleSimulateFailure}
+            className={cn(
+              "rounded-md px-2 py-0.5 text-[10px] font-bold uppercase transition-colors cursor-pointer",
+              simulateFailure
+                ? "bg-red-500 text-white"
+                : "bg-zinc-200 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300"
+            )}
+          >
+            {simulateFailure ? "ON (Failing)" : "OFF (Normal)"}
+          </button>
+        </div>
+      )}
     </div>
   );
 }

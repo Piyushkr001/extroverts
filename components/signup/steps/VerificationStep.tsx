@@ -33,12 +33,14 @@ import { REGEXP_ONLY_DIGITS } from "input-otp";
 
 interface VerificationStepProps {
   initialEmail: string;
+  demoMode?: boolean;
   onVerified: (email: string) => void;
   onBack: () => void;
 }
 
 export function VerificationStep({
   initialEmail,
+  demoMode = false,
   onVerified,
   onBack,
 }: VerificationStepProps) {
@@ -84,9 +86,10 @@ export function VerificationStep({
       const response = await sendOtpMock(data.email, { shouldFail: simulateFail });
       if (response.success) {
         setTargetEmail(data.email);
+        setOtpValue("");
+        setOtpError(null);
         setSubStage("otp");
         setResendCooldown(30);
-        setOtpError(null);
       } else {
         setEmailError("email", { message: response.message });
       }
@@ -232,7 +235,11 @@ export function VerificationStep({
             </span>
             <button
               type="button"
-              onClick={() => setSubStage("email")}
+              onClick={() => {
+                setSubStage("email");
+                setOtpValue("");
+                setOtpError(null);
+              }}
               className="flex items-center gap-1 text-[11px] font-semibold text-violet-600 hover:text-violet-700 dark:text-violet-400 dark:hover:text-violet-300"
             >
               <Edit2 className="h-3 w-3" />
@@ -287,16 +294,16 @@ export function VerificationStep({
             </span>
           </div>
 
-          {/* Action Submit */}
+          {/* Action Button */}
           <Button
             type="submit"
             disabled={isSubmitting || otpValue.length < 6}
-            className="mt-1 h-12 rounded-xl bg-linear-to-r from-violet-600 via-purple-600 to-fuchsia-600 font-semibold text-white shadow-lg shadow-violet-500/25 transition-all hover:scale-[1.01] hover:shadow-xl hover:from-violet-700 hover:via-purple-700 hover:to-fuchsia-700 disabled:opacity-60 cursor-pointer"
+            className="mt-2 h-12 rounded-xl bg-linear-to-r from-violet-600 via-purple-600 to-fuchsia-600 font-semibold text-white shadow-lg shadow-violet-500/25 transition-all hover:scale-[1.01] hover:shadow-xl hover:from-violet-700 hover:via-purple-700 hover:to-fuchsia-700 disabled:opacity-60 cursor-pointer"
           >
             {isSubmitting ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Verifying code...
+                Verifying...
               </>
             ) : (
               <>
@@ -307,11 +314,11 @@ export function VerificationStep({
           </Button>
 
           {/* Resend OTP */}
-          <div className="flex items-center justify-center gap-1 text-xs text-zinc-500 dark:text-zinc-400">
-            <span>Didn&apos;t receive a code?</span>
+          <div className="flex items-center justify-center gap-1.5 text-xs text-zinc-500 dark:text-zinc-400">
+            <span>Didn&apos;t receive the code?</span>
             {resendCooldown > 0 ? (
-              <span className="font-semibold text-zinc-700 dark:text-zinc-300">
-                Resend in 00:{resendCooldown < 10 ? `0${resendCooldown}` : resendCooldown}
+              <span className="font-mono font-medium text-violet-600 dark:text-violet-400">
+                Resend in {resendCooldown}s
               </span>
             ) : (
               <button
@@ -328,25 +335,27 @@ export function VerificationStep({
         </form>
       )}
 
-      {/* Evaluator Simulation Control (Failure State Testing) */}
-      <div className="mt-6 flex items-center justify-between border-t border-black/5 pt-4 text-[11px] text-zinc-400 dark:border-white/10">
-        <span className="flex items-center gap-1">
-          <Bug className="h-3 w-3" />
-          <span>Simulate Network Failure:</span>
-        </span>
-        <button
-          type="button"
-          onClick={() => setSimulateFail((prev) => !prev)}
-          className={cn(
-            "rounded-md px-2 py-0.5 text-[10px] font-bold uppercase transition-colors",
-            simulateFail
-              ? "bg-red-500 text-white"
-              : "bg-zinc-200 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300"
-          )}
-        >
-          {simulateFail ? "ON (Failing)" : "OFF (Normal)"}
-        </button>
-      </div>
+      {/* Evaluator Simulation Control (Only in demo mode /signup?demo=true) */}
+      {demoMode && (
+        <div className="mt-6 flex items-center justify-between border-t border-black/5 pt-4 text-[11px] text-zinc-400 dark:border-white/10">
+          <span className="flex items-center gap-1">
+            <Bug className="h-3 w-3" />
+            <span>Demo Mode — Simulate Network Failure:</span>
+          </span>
+          <button
+            type="button"
+            onClick={() => setSimulateFail((prev) => !prev)}
+            className={cn(
+              "rounded-md px-2 py-0.5 text-[10px] font-bold uppercase transition-colors",
+              simulateFail
+                ? "bg-red-500 text-white"
+                : "bg-zinc-200 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300"
+            )}
+          >
+            {simulateFail ? "ON (Failing)" : "OFF (Normal)"}
+          </button>
+        </div>
+      )}
     </div>
   );
 }

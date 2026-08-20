@@ -21,7 +21,7 @@ export default function Footer() {
           </span>
         </div>
 
-        <div className="flex items-center gap-6 text-xs text-zinc-500 dark:text-zinc-400">
+        <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs text-zinc-500 dark:text-zinc-400">
           <Link
             href="/about"
             className="transition-colors hover:text-zinc-900 dark:hover:text-zinc-100"

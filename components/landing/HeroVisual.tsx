@@ -9,20 +9,11 @@ import {
   Wifi,
   Battery,
   Signal,
-  Flame,
+  User,
+  Calendar,
 } from "lucide-react";
 
-import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
-
-const VIBE_TAGS = [
-  { label: "Rooftop Party 🍸", selected: true },
-  { label: "Live Music 🎸", selected: true },
-  { label: "Coffee Chats ☕", selected: true },
-  { label: "Board Games 🎲", selected: false },
-  { label: "Sunset Treks 🌅", selected: false },
-  { label: "Night Foodies 🍕", selected: true },
-];
 
 export function HeroVisual() {
   return (
@@ -69,12 +60,12 @@ export function HeroVisual() {
             variant="secondary"
             className="flex items-center gap-1 rounded-full bg-violet-600/10 px-2.5 py-0.5 text-[10px] font-semibold text-violet-700 dark:bg-violet-400/10 dark:text-violet-300"
           >
-            <Flame className="h-3 w-3 text-orange-500" />
+            <Sparkles className="h-3 w-3 text-violet-600 dark:text-violet-400" />
             <span>Wizard</span>
           </Badge>
         </div>
 
-        {/* Mockup Content: Onboarding Step 1 Preview */}
+        {/* Mockup Content: Basic Profile Step 1 Preview */}
         <div className="flex flex-col gap-3 rounded-2xl border border-black/5 bg-zinc-50/80 p-4 dark:border-white/5 dark:bg-zinc-800/60">
           {/* Step Progress Header */}
           <div className="flex items-center justify-between text-xs font-semibold">
@@ -82,7 +73,7 @@ export function HeroVisual() {
               Step 1 of 4
             </span>
             <span className="text-zinc-500 dark:text-zinc-400">
-              Vibe & Energy
+              Basic Profile
             </span>
           </div>
 
@@ -95,34 +86,37 @@ export function HeroVisual() {
           </div>
 
           {/* Step Prompt */}
-          <div className="mt-1">
+          <div className="mt-0.5">
             <h2 className="text-sm font-bold text-zinc-900 dark:text-zinc-100">
-              What&apos;s your hangout style?
+              Tell us about yourself
             </h2>
             <p className="text-[11px] text-zinc-500 dark:text-zinc-400">
-              Pick your interests to get curated group matches.
+              Your identity helps match you with compatible hangouts.
             </p>
           </div>
 
-          {/* Vibe Tags Grid */}
-          <div className="flex flex-wrap gap-1.5 pt-1">
-            {VIBE_TAGS.map((tag) => (
-              <span
-                key={tag.label}
-                className={cn(
-                  "inline-flex items-center rounded-xl px-2.5 py-1 text-[11px] font-medium transition-all duration-200",
-                  tag.selected
-                    ? "border border-violet-500/30 bg-linear-to-r from-violet-600/15 via-purple-600/15 to-fuchsia-600/15 text-violet-800 shadow-xs dark:border-violet-400/30 dark:text-violet-200"
-                    : "border border-zinc-200/80 bg-white/80 text-zinc-600 dark:border-zinc-700 dark:bg-zinc-900/60 dark:text-zinc-400"
-                )}
-              >
-                {tag.label}
-              </span>
-            ))}
+          {/* Decorative Form Fields for Step 1 */}
+          <div className="flex flex-col gap-2 pt-0.5">
+            {/* Mock Full Name */}
+            <div className="flex h-9 items-center rounded-xl border border-zinc-200/80 bg-white/90 px-3 text-xs text-zinc-800 shadow-xs dark:border-zinc-700 dark:bg-zinc-900/80 dark:text-zinc-200">
+              <User className="mr-2 h-3.5 w-3.5 text-zinc-400" />
+              <span>Alex Rivera</span>
+            </div>
+
+            {/* Mock Age & Gender in one row */}
+            <div className="flex gap-2">
+              <div className="flex h-9 flex-1 items-center rounded-xl border border-zinc-200/80 bg-white/90 px-3 text-xs text-zinc-800 shadow-xs dark:border-zinc-700 dark:bg-zinc-900/80 dark:text-zinc-200">
+                <Calendar className="mr-2 h-3.5 w-3.5 text-zinc-400" />
+                <span>22 yrs</span>
+              </div>
+              <div className="flex h-9 flex-1 items-center justify-center rounded-xl border border-violet-500/30 bg-violet-500/10 px-3 text-xs font-semibold text-violet-700 dark:border-violet-400/30 dark:bg-violet-400/10 dark:text-violet-300">
+                <span>She / Her</span>
+              </div>
+            </div>
           </div>
 
           {/* Mini Action Button */}
-          <div className="mt-2 flex items-center justify-between rounded-xl bg-linear-to-r from-violet-600 via-purple-600 to-fuchsia-600 px-4 py-2.5 text-xs font-semibold text-white shadow-md shadow-violet-500/20">
+          <div className="mt-1 flex items-center justify-between rounded-xl bg-linear-to-r from-violet-600 via-purple-600 to-fuchsia-600 px-4 py-2.5 text-xs font-semibold text-white shadow-md shadow-violet-500/20">
             <span>Continue to Step 2</span>
             <ChevronRight className="h-4 w-4" />
           </div>
@@ -143,7 +137,7 @@ export function HeroVisual() {
               </div>
             </div>
             <span className="text-[11px] font-medium text-zinc-600 dark:text-zinc-300">
-              <strong className="text-zinc-900 dark:text-zinc-100">18+</strong> matching now
+              <strong className="text-zinc-900 dark:text-zinc-100">Live</strong> community hangouts
             </span>
           </div>
           <span className="flex size-2 rounded-full bg-emerald-500 ring-4 ring-emerald-500/20" />
@@ -166,7 +160,7 @@ export function HeroVisual() {
             </p>
           </div>
           <p className="text-xs font-bold text-zinc-900 dark:text-zinc-100">
-            24+ Active Hangouts
+            Discover Nearby Hangouts
           </p>
         </div>
       </div>
@@ -181,10 +175,10 @@ export function HeroVisual() {
         </div>
         <div>
           <p className="text-xs font-bold text-zinc-900 dark:text-zinc-100">
-            98% Vibe Match
+            Find Your Vibe
           </p>
           <p className="text-[11px] text-zinc-500 dark:text-zinc-400">
-            Based on shared interests
+            Connect through shared interests
           </p>
         </div>
       </div>

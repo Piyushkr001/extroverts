@@ -35,40 +35,42 @@ Landing Screen (/)
 
 ## ✨ Key Features & Architectural Highlights
 
-### 1. Robust Multi-Step Signup Wizard
-- **Gated Onboarding**: Profile details unlock only after verified email authentication.
+### 1. Multi-Step Signup Wizard
+- **Gated Onboarding**: Profile details unlock only after verified email authentication. Direct `/signup` access without accepted terms redirects safely to `/terms`.
 - **Backward & Forward Navigation**: Seamless step navigation preserving previously entered data.
-- **Hydration Safety**: Deterministic initial render state preventing SSR/Client hydration mismatches.
-- **Session State Recovery**: Safe `sessionStorage` synchronization with corrupted data fallbacks and step-normalization guards.
+- **Hydration Safety**: Built with `useSyncExternalStore` ensuring 100% deterministic SSR/client hydration without cascading re-renders.
+- **Session State Recovery**: Safe `sessionStorage` synchronization with corrupted data fallbacks and Zod-powered step-normalization guards.
 
-### 2. Validation & Security Guardrails
-- **Age Restriction ($\ge 18$)**: Immediate contextual error and guidance preventing $< 18$ registration.
-- **Dependent Location Cascade**: State selection populates cities; modifying parent State or City automatically resets dependent children.
+### 2. Validation & Guardrails
+- **Age Restriction ($\ge 18$)**: Immediate contextual guidance and schema enforcement preventing $< 18$ registration.
+- **Dependent Location Cascade**: State selection populates cities; modifying parent State or City automatically resets dependent descendants.
 - **Input Constraints**: Aligned HTML `maxLength` limits with Zod schemas across all text inputs and textareas.
 - **Live Character Counter**: Bio counter ($10 - 180$ chars) with dynamic threshold styling.
-- **Numeric-Only OTP**: 6-digit `InputOTP` enforcing `REGEXP_ONLY_DIGITS`, auto-focus, and paste support.
+- **Numeric-Only OTP**: 6-digit `InputOTP` enforcing `REGEXP_ONLY_DIGITS`, numeric inputMode, auto-focus, and paste support.
 
 ### 3. Asynchronous Simulation & Error Handling
-- **Frontend-Only Simulation**: Simulated network requests ($800\text{ms} - 1200\text{ms}$) without requiring backend databases.
+- **Frontend-Only Simulation**: Simulated network latency ($800\text{ms} - 1200\text{ms}$) with zero external backend dependencies.
 - **Duplicate Submission Protection**: Asynchronous action buttons disabled with spinner states during active network calls.
 - **Two-Tier Error Architecture**:
   - *Field-level errors*: Displayed inline directly beneath the affected input with `role="alert"`.
   - *Global submission errors*: Presented via top-level alert banners in the wizard shell.
-- **Deterministic Testing Controls**: Toggle controls provided on verification and submission steps to test failure handling on demand.
+- **Demo Mode Controls**: Hidden by default for production fidelity; available via `/signup?demo=true` for testing deterministic failure handling.
 
 ### 4. Accessibility & Responsive Design
-- **Semantics**: Fully accessible `<form>`, `<label>`, `role="radiogroup"`, `role="checkbox"`, `aria-checked`, `aria-invalid`, and `aria-describedby`.
+- **Semantics**: Accessible `<form>`, `<label>`, `role="radiogroup"`, `role="radio"`, `role="checkbox"`, `aria-checked`, `aria-invalid`, and `aria-describedby`.
 - **Keyboard Navigation**: Full tab index flow, keyboard enter submission, and visible focus rings.
 - **Breakpoints Tested**: $320\text{px}$, $375\text{px}$, $430\text{px}$, $640\text{px}$, $768\text{px}$, $1024\text{px}$, $1440\text{px}$.
 
 ---
 
-## 🔑 Demo Credentials
+## 🔑 Demo Credentials & Testing Modes
 
-| Parameter | Value | Notes |
+| Mode / Feature | URL / Value | Notes |
 | :--- | :--- | :--- |
-| **Demo OTP Code** | `123456` | Works for any valid email format |
-| **Failure Testing** | Toggle button in UI | Tests simulated network failure states deterministically |
+| **Standard Production Mode** | `/signup` | Clean, production-fidelity UI without testing clutter |
+| **Evaluator Demo Mode** | `/signup?demo=true` | Displays subtle toggles for simulating failure states |
+| **Demo OTP Code** | `123456` | Valid 6-digit verification code |
+| **Simulated Email Failure** | `fail@example.com` | Deterministically tests network failure on email step |
 
 ---
 

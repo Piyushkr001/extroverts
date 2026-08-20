@@ -69,6 +69,7 @@ export default function Navbar() {
                 variant="ghost"
                 size="sm"
                 nativeButton={false}
+                aria-current={active ? "page" : undefined}
                 render={<Link href={link.path} />}
                 className={cn(
                   "relative rounded-full px-4 font-medium transition-all duration-200",
@@ -143,6 +144,7 @@ export default function Navbar() {
                       key={link.path}
                       variant={active ? "secondary" : "ghost"}
                       nativeButton={false}
+                      aria-current={active ? "page" : undefined}
                       render={
                         <Link
                           href={link.path}

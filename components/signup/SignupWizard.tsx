@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { WizardShell } from "./WizardShell";
 import { VerificationStep } from "./steps/VerificationStep";
 import { StepOneProfile } from "./steps/StepOneProfile";
@@ -12,7 +13,15 @@ import { useSignupWizard } from "@/hooks/useSignupWizard";
 import { submitFinalSignupMock } from "@/lib/mock/signup-service";
 import { SignupFormData } from "@/types/signup";
 
+import { useTermsAccepted } from "@/lib/storage/terms-storage";
+
 export function SignupWizard() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const demoMode = searchParams.get("demo") === "true";
+
+  const isTermsAccepted = useTermsAccepted();
+
   const {
     currentStep,
     formData,
@@ -28,6 +37,13 @@ export function SignupWizard() {
     goBack,
     resetWizard,
   } = useSignupWizard();
+
+  // Terms Acceptance Guard: Client-side redirect if terms were not accepted
+  React.useEffect(() => {
+    if (isHydrated && !isTermsAccepted) {
+      router.replace("/terms");
+    }
+  }, [isHydrated, isTermsAccepted, router]);
 
   // Verification step callback
   const handleEmailVerified = (email: string) => {
@@ -65,7 +81,7 @@ export function SignupWizard() {
     }
   };
 
-  if (!isHydrated) {
+  if (!isHydrated || !isTermsAccepted) {
     return (
       <WizardShell>
         <div className="flex h-64 items-center justify-center">
@@ -83,6 +99,7 @@ export function SignupWizard() {
       {currentStep === "verification" && (
         <VerificationStep
           initialEmail={formData.email}
+          demoMode={demoMode}
           onVerified={handleEmailVerified}
           onBack={goBack}
         />
@@ -116,6 +133,7 @@ export function SignupWizard() {
         <StepFourSocial
           initialData={formData}
           isSubmitting={isSubmitting}
+          demoMode={demoMode}
           simulateFailure={simulateFailure}
           onToggleSimulateFailure={() => setSimulateFailure((prev) => !prev)}
           onFinalSubmit={handleFinalSubmit}

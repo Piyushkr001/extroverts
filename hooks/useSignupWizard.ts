@@ -4,6 +4,13 @@ import * as React from "react";
 import { useRouter } from "next/navigation";
 import { SignupFormData, WizardStepKey } from "@/types/signup";
 
+import {
+  stepOneProfileSchema,
+  stepTwoLocationSchema,
+  stepThreeVibesSchema,
+  stepFourSocialSchema,
+} from "@/lib/validations/signup.schema";
+
 const STORAGE_KEY = "extroverts_signup_wizard_state_v1";
 
 const INITIAL_FORM_DATA: SignupFormData = {
@@ -31,24 +38,44 @@ const STEP_ORDER: WizardStepKey[] = [
   "success",
 ];
 
-// Normalize restored step so incomplete previous steps cannot be bypassed
+// Normalize restored step using Zod schemas so invalid or incomplete steps cannot be bypassed
 function normalizeAllowedStep(
   requestedStep: WizardStepKey,
   data: SignupFormData
 ): WizardStepKey {
-  if (!data.isEmailVerified) {
+  if (!data.isEmailVerified || !data.email) {
     return "verification";
   }
-  if (!data.fullName || !data.age || !data.gender) {
+
+  const stepOneValid = stepOneProfileSchema.safeParse({
+    fullName: data.fullName,
+    age: data.age,
+    gender: data.gender,
+  }).success;
+
+  if (!stepOneValid) {
     return requestedStep === "verification" ? "verification" : "step1_profile";
   }
-  if (!data.state || !data.city || !data.collegeOrWorkplace) {
+
+  const stepTwoValid = stepTwoLocationSchema.safeParse({
+    state: data.state,
+    city: data.city,
+    collegeOrWorkplace: data.collegeOrWorkplace,
+  }).success;
+
+  if (!stepTwoValid) {
     if (requestedStep === "verification" || requestedStep === "step1_profile") {
       return requestedStep;
     }
     return "step2_location";
   }
-  if (!data.vibes || data.vibes.length < 2 || !data.hangoutStyle) {
+
+  const stepThreeValid = stepThreeVibesSchema.safeParse({
+    vibes: data.vibes,
+    hangoutStyle: data.hangoutStyle,
+  }).success;
+
+  if (!stepThreeValid) {
     if (
       requestedStep === "verification" ||
       requestedStep === "step1_profile" ||
@@ -58,7 +85,14 @@ function normalizeAllowedStep(
     }
     return "step3_vibes";
   }
-  if (!data.instagramHandle || !data.bio || !data.availability) {
+
+  const stepFourValid = stepFourSocialSchema.safeParse({
+    instagramHandle: data.instagramHandle,
+    bio: data.bio,
+    availability: data.availability,
+  }).success;
+
+  if (!stepFourValid) {
     if (
       requestedStep === "verification" ||
       requestedStep === "step1_profile" ||
@@ -69,6 +103,7 @@ function normalizeAllowedStep(
     }
     return "step4_social";
   }
+
   return requestedStep;
 }
 

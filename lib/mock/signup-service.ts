@@ -17,7 +17,7 @@ export async function sendOtpMock(
 ): Promise<ServiceResponse<{ demoOtp: string }>> {
   await sleep(900);
 
-  if (options?.shouldFail || email.toLowerCase().includes("fail@")) {
+  if (options?.shouldFail || email.toLowerCase() === "fail@example.com") {
     return {
       success: false,
       message:

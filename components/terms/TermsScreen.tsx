@@ -10,8 +10,14 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
 
+import { useTermsAccepted, setTermsAcceptedInStorage } from "@/lib/storage/terms-storage";
+
 export function TermsScreen() {
-  const [agreed, setAgreed] = React.useState(false);
+  const agreed = useTermsAccepted();
+
+  const handleAgreeChange = (checked: boolean) => {
+    setTermsAcceptedInStorage(checked);
+  };
 
   return (
     <main className="relative min-h-[calc(100vh-4rem)] flex-1 overflow-hidden bg-linear-to-b from-white via-violet-50/40 to-purple-100/30 py-10 transition-colors duration-300 sm:py-14 dark:from-zinc-950 dark:via-violet-950/20 dark:to-zinc-950">
@@ -136,7 +142,7 @@ export function TermsScreen() {
             <Checkbox
               id="terms-agree"
               checked={agreed}
-              onCheckedChange={(checked) => setAgreed(!!checked)}
+              onCheckedChange={(checked) => handleAgreeChange(!!checked)}
               className="mt-0.5"
             />
             <label
