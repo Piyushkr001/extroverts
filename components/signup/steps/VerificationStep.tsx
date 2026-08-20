@@ -265,15 +265,22 @@ export function VerificationStep({
               disabled={isSubmitting}
               autoFocus
             >
-              <InputOTPGroup className="gap-1.5 sm:gap-2">
-                <InputOTPSlot index={0} className="h-12 w-10 sm:w-11 rounded-xl text-base font-bold" />
-                <InputOTPSlot index={1} className="h-12 w-10 sm:w-11 rounded-xl text-base font-bold" />
-                <InputOTPSlot index={2} className="h-12 w-10 sm:w-11 rounded-xl text-base font-bold" />
-                <InputOTPSlot index={3} className="h-12 w-10 sm:w-11 rounded-xl text-base font-bold" />
-                <InputOTPSlot index={4} className="h-12 w-10 sm:w-11 rounded-xl text-base font-bold" />
-                <InputOTPSlot index={5} className="h-12 w-10 sm:w-11 rounded-xl text-base font-bold" />
+              <InputOTPGroup className="gap-1 min-[360px]:gap-1.5 sm:gap-2">
+                <InputOTPSlot index={0} className="h-11 w-8 min-[360px]:w-10 sm:h-12 sm:w-11 rounded-xl text-sm sm:text-base font-bold" />
+                <InputOTPSlot index={1} className="h-11 w-8 min-[360px]:w-10 sm:h-12 sm:w-11 rounded-xl text-sm sm:text-base font-bold" />
+                <InputOTPSlot index={2} className="h-11 w-8 min-[360px]:w-10 sm:h-12 sm:w-11 rounded-xl text-sm sm:text-base font-bold" />
+                <InputOTPSlot index={3} className="h-11 w-8 min-[360px]:w-10 sm:h-12 sm:w-11 rounded-xl text-sm sm:text-base font-bold" />
+                <InputOTPSlot index={4} className="h-11 w-8 min-[360px]:w-10 sm:h-12 sm:w-11 rounded-xl text-sm sm:text-base font-bold" />
+                <InputOTPSlot index={5} className="h-11 w-8 min-[360px]:w-10 sm:h-12 sm:w-11 rounded-xl text-sm sm:text-base font-bold" />
               </InputOTPGroup>
             </InputOTP>
+
+            {demoMode && (
+              <div className="mt-1 flex items-center justify-center gap-1.5 rounded-lg border border-violet-500/20 bg-violet-500/5 px-2.5 py-1 text-[11px] font-medium text-violet-700 dark:text-violet-300">
+                <span>Evaluation Demo Code:</span>
+                <strong className="font-mono font-bold">{DEMO_VALID_OTP}</strong>
+              </div>
+            )}
 
             {otpError && (
               <p

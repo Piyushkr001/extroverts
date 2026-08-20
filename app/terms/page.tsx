@@ -1,3 +1,4 @@
+import * as React from "react";
 import { Metadata } from "next";
 import { TermsScreen } from "@/components/terms/TermsScreen";
 
@@ -7,5 +8,9 @@ export const metadata: Metadata = {
 };
 
 export default function TermsPage() {
-  return <TermsScreen />;
+  return (
+    <React.Suspense fallback={null}>
+      <TermsScreen />
+    </React.Suspense>
+  );
 }

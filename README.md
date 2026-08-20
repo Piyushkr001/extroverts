@@ -16,7 +16,7 @@ Landing Screen (/)
                        └──> Step 2: Location & Work (State -> City -> College)
                               └──> Step 3: Vibe Interests (Multi-select, Group Style)
                                      └──> Step 4: Socials & Bio (Handle, Bio Counter, Availability)
-                                            └──> Profile Verified Success State
+                                            └──> Profile Setup Complete Success State
 ```
 
 ---

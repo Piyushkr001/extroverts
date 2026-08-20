@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { SignupFormData, WizardStepKey } from "@/types/signup";
 
 import {
+  emailVerificationSchema,
   stepOneProfileSchema,
   stepTwoLocationSchema,
   stepThreeVibesSchema,
@@ -43,7 +44,11 @@ function normalizeAllowedStep(
   requestedStep: WizardStepKey,
   data: SignupFormData
 ): WizardStepKey {
-  if (!data.isEmailVerified || !data.email) {
+  const emailValid = emailVerificationSchema.safeParse({
+    email: data.email,
+  }).success;
+
+  if (!data.isEmailVerified || !emailValid) {
     return "verification";
   }
 

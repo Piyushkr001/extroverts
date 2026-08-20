@@ -3,21 +3,25 @@
 import * as React from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { ArrowLeft, ArrowRight, ShieldCheck, Sparkles, AlertCircle } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
-
 import { useTermsAccepted, setTermsAcceptedInStorage } from "@/lib/storage/terms-storage";
 
 export function TermsScreen() {
   const agreed = useTermsAccepted();
+  const searchParams = useSearchParams();
+  const demoMode = searchParams.get("demo") === "true";
 
   const handleAgreeChange = (checked: boolean) => {
     setTermsAcceptedInStorage(checked);
   };
+
+  const signupHref = demoMode ? "/signup?demo=true" : "/signup";
 
   return (
     <main className="relative min-h-[calc(100vh-4rem)] flex-1 overflow-hidden bg-linear-to-b from-white via-violet-50/40 to-purple-100/30 py-10 transition-colors duration-300 sm:py-14 dark:from-zinc-950 dark:via-violet-950/20 dark:to-zinc-950">
@@ -94,8 +98,8 @@ export function TermsScreen() {
                 1. Welcome to the Extroverts Community
               </h2>
               <p>
-                Extroverts is a platform created to facilitate real-world social
-                connections, genuine meetups, and high-vibe group experiences.
+                Extroverts is designed to facilitate friendly social
+                connections, genuine meetups, and engaging group experiences.
                 By continuing, you agree to treat all members with respect,
                 dignity, and kindness.
               </p>
@@ -106,10 +110,10 @@ export function TermsScreen() {
                 2. Community Code of Conduct
               </h2>
               <p>
-                We maintain a strict zero-tolerance policy against harassment,
-                hate speech, discrimination, unsolicited solicitation, or any
-                form of non-consensual behavior. Violators will face immediate
-                and permanent account revocation.
+                We foster an inclusive and respectful environment. Members
+                are expected to communicate constructively, respect personal
+                boundaries, and practice mutual consideration during all
+                interactions.
               </p>
             </section>
 
@@ -118,10 +122,9 @@ export function TermsScreen() {
                 3. Real-World Meetups & Safety
               </h2>
               <p>
-                While Extroverts helps connect like-minded individuals, members
-                are expected to practice personal safety precautions when
-                attending in-person meetups. We encourage initial group
-                gatherings in well-lit, public venues.
+                When participating in real-world community hangouts, members
+                are encouraged to practice standard personal safety habits,
+                such as meeting in well-lit, public venues for initial gatherings.
               </p>
             </section>
 
@@ -130,9 +133,9 @@ export function TermsScreen() {
                 4. Privacy & Account Authenticity
               </h2>
               <p>
-                To maintain a safe and verified environment, members must
-                provide accurate profile information. Extroverts does not sell
-                your personal data to third parties.
+                To create a trusted environment, members are asked to provide
+                accurate profile information. Extroverts treats user privacy
+                with diligence and care.
               </p>
             </section>
           </div>
@@ -168,7 +171,7 @@ export function TermsScreen() {
               size="lg"
               disabled={!agreed}
               nativeButton={false}
-              render={<Link href="/signup" />}
+              render={<Link href={signupHref} />}
               className={cn(
                 "h-12 rounded-xl px-8 font-semibold text-white transition-all duration-300",
                 agreed

@@ -48,7 +48,7 @@ export function SignupSuccess({ formData, onReset }: SignupSuccessProps) {
         className="mb-3 gap-1 rounded-full border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs font-semibold text-emerald-700 dark:border-emerald-400/30 dark:bg-emerald-400/10 dark:text-emerald-300"
       >
         <Sparkles className="size-3 text-emerald-500" />
-        <span>Profile Verified & Ready</span>
+        <span>Profile Setup Complete</span>
       </Badge>
 
       <h1 className="text-2xl font-extrabold tracking-tight text-zinc-900 sm:text-3xl dark:text-zinc-50">
@@ -59,7 +59,7 @@ export function SignupSuccess({ formData, onReset }: SignupSuccessProps) {
         <strong className="font-semibold text-zinc-900 dark:text-zinc-100">
           {formData.fullName}
         </strong>
-        ! Your community profile is now live.
+        ! Your profile has been completed successfully.
       </p>
 
       {/* Profile Summary Card */}

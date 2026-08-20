@@ -41,9 +41,9 @@ export function SignupWizard() {
   // Terms Acceptance Guard: Client-side redirect if terms were not accepted
   React.useEffect(() => {
     if (isHydrated && !isTermsAccepted) {
-      router.replace("/terms");
+      router.replace(demoMode ? "/terms?demo=true" : "/terms");
     }
-  }, [isHydrated, isTermsAccepted, router]);
+  }, [isHydrated, isTermsAccepted, demoMode, router]);
 
   // Verification step callback
   const handleEmailVerified = (email: string) => {

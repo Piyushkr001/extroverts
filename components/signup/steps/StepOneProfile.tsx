@@ -46,7 +46,7 @@ export function StepOneProfile({
     resolver: zodResolver(stepOneProfileSchema),
     defaultValues: {
       fullName: initialData.fullName || "",
-      age: initialData.age || ("" as unknown as number),
+      age: typeof initialData.age === "number" ? initialData.age : undefined,
       gender: initialData.gender || "",
     },
     mode: "onBlur",
@@ -126,7 +126,7 @@ export function StepOneProfile({
               id="age"
               type="number"
               inputMode="numeric"
-              min={1}
+              min={18}
               max={120}
               placeholder="e.g. 21"
               className={cn(
