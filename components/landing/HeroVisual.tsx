@@ -29,7 +29,10 @@ export function HeroVisual() {
       />
 
       {/* Main Mobile App Mockup Frame */}
-      <div className="relative z-10 w-full max-w-85 sm:max-w-95 rounded-[2.5rem] border border-white/80 bg-white/70 p-4 sm:p-5 shadow-2xl shadow-violet-500/10 backdrop-blur-2xl ring-1 ring-black/5 dark:border-white/10 dark:bg-zinc-900/80 dark:shadow-violet-950/40 dark:ring-white/10">
+      <div
+        aria-hidden="true"
+        className="relative z-10 w-full max-w-85 sm:max-w-95 rounded-[2.5rem] border border-white/80 bg-white/70 p-4 sm:p-5 shadow-2xl shadow-violet-500/10 backdrop-blur-2xl ring-1 ring-black/5 dark:border-white/10 dark:bg-zinc-900/80 dark:shadow-violet-950/40 dark:ring-white/10"
+      >
         {/* Dynamic Island / Speaker Pill */}
         <div className="mx-auto mb-3 flex h-4 w-28 items-center justify-center rounded-full bg-zinc-900/90 dark:bg-zinc-800/90">
           <div className="size-2 rounded-full bg-zinc-800 dark:bg-zinc-700" />

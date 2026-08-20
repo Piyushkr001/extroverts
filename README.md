@@ -49,7 +49,7 @@ Landing Screen (/)
 - **Numeric-Only OTP**: 6-digit `InputOTP` enforcing `REGEXP_ONLY_DIGITS`, numeric inputMode, auto-focus, and paste support.
 
 ### 3. Asynchronous Simulation & Error Handling
-- **Frontend-Only Simulation**: Simulated network latency ($800\text{ms} - 1200\text{ms}$) with zero external backend dependencies.
+- **Frontend Simulation**: Email OTP verification and profile submission flows are simulated client-side with realistic network latency ($800\text{ms} - 1200\text{ms}$), requiring zero external backend or SMS/email API credentials.
 - **Duplicate Submission Protection**: Asynchronous action buttons disabled with spinner states during active network calls.
 - **Two-Tier Error Architecture**:
   - *Field-level errors*: Displayed inline directly beneath the affected input with `role="alert"`.

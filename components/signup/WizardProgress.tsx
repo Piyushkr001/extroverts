@@ -27,7 +27,14 @@ export function WizardProgress({
       </div>
 
       {/* 4-Segment Progress Bar */}
-      <div className="flex items-center gap-1.5" role="progressbar" aria-valuenow={currentStepNumber} aria-valuemin={1} aria-valuemax={totalSteps}>
+      <div
+        className="flex items-center gap-1.5"
+        role="progressbar"
+        aria-valuenow={currentStepNumber}
+        aria-valuemin={1}
+        aria-valuemax={totalSteps}
+        aria-label="Signup progress"
+      >
         {Array.from({ length: totalSteps }).map((_, index) => {
           const stepIndex = index + 1;
           const isFilled = stepIndex <= currentStepNumber;

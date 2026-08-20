@@ -45,6 +45,13 @@ export function SignupWizard() {
     }
   }, [isHydrated, isTermsAccepted, demoMode, router]);
 
+  // Back handler preserving query parameter mode
+  const handleBack = () => {
+    goBack(() => {
+      router.push(demoMode ? "/terms?demo=true" : "/terms");
+    });
+  };
+
   // Verification step callback
   const handleEmailVerified = (email: string) => {
     updateFormData({ email, isEmailVerified: true });
@@ -101,7 +108,7 @@ export function SignupWizard() {
           initialEmail={formData.email}
           demoMode={demoMode}
           onVerified={handleEmailVerified}
-          onBack={goBack}
+          onBack={handleBack}
         />
       )}
 
@@ -109,7 +116,7 @@ export function SignupWizard() {
         <StepOneProfile
           initialData={formData}
           onSaveAndNext={handleStepSaveAndNext}
-          onBack={goBack}
+          onBack={handleBack}
         />
       )}
 
@@ -117,7 +124,7 @@ export function SignupWizard() {
         <StepTwoLocation
           initialData={formData}
           onSaveAndNext={handleStepSaveAndNext}
-          onBack={goBack}
+          onBack={handleBack}
         />
       )}
 
@@ -125,7 +132,7 @@ export function SignupWizard() {
         <StepThreeVibes
           initialData={formData}
           onSaveAndNext={handleStepSaveAndNext}
-          onBack={goBack}
+          onBack={handleBack}
         />
       )}
 
@@ -137,13 +144,14 @@ export function SignupWizard() {
           simulateFailure={simulateFailure}
           onToggleSimulateFailure={() => setSimulateFailure((prev) => !prev)}
           onFinalSubmit={handleFinalSubmit}
-          onBack={goBack}
+          onBack={handleBack}
         />
       )}
 
       {currentStep === "success" && (
         <SignupSuccess
           formData={formData}
+          demoMode={demoMode}
           onReset={resetWizard}
         />
       )}

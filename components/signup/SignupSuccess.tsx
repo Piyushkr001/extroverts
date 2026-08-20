@@ -20,10 +20,15 @@ import { VIBE_OPTIONS } from "@/lib/data/locations";
 
 interface SignupSuccessProps {
   formData: SignupFormData;
+  demoMode?: boolean;
   onReset: () => void;
 }
 
-export function SignupSuccess({ formData, onReset }: SignupSuccessProps) {
+export function SignupSuccess({
+  formData,
+  demoMode = false,
+  onReset,
+}: SignupSuccessProps) {
   // Find readable labels for selected vibes
   const selectedVibeLabels = (formData.vibes || []).map((id) => {
     const found = VIBE_OPTIONS.find((v) => v.id === id);
@@ -120,7 +125,7 @@ export function SignupSuccess({ formData, onReset }: SignupSuccessProps) {
           <ArrowRight className="ml-2 size-4" />
         </Button>
 
-        {/* Restart Demo Button for Evaluator ease */}
+        {/* Restart Action */}
         <Button
           variant="ghost"
           size="sm"
@@ -128,7 +133,7 @@ export function SignupSuccess({ formData, onReset }: SignupSuccessProps) {
           className="h-10 text-xs text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
         >
           <RotateCcw className="mr-1.5 size-3.5" />
-          <span>Start Another Signup Test</span>
+          <span>{demoMode ? "Start Another Signup Test" : "Start Over"}</span>
         </Button>
       </div>
     </div>

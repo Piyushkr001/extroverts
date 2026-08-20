@@ -51,7 +51,7 @@ export async function verifyOtpMock(
   if (otp !== DEMO_VALID_OTP) {
     return {
       success: false,
-      message: "Invalid verification code. Use the demo code '123456'.",
+      message: "Invalid verification code. Please try again.",
     };
   }
 

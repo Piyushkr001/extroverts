@@ -246,19 +246,26 @@ export function useSignupWizard() {
     }
   }, [wizardData.currentStep, markStepComplete, goToStep]);
 
-  const goBack = React.useCallback(() => {
-    setGlobalError(null);
-    const currentIndex = STEP_ORDER.indexOf(wizardData.currentStep);
+  const goBack = React.useCallback(
+    (onFirstStepBack?: () => void) => {
+      setGlobalError(null);
+      const currentIndex = STEP_ORDER.indexOf(wizardData.currentStep);
 
-    if (currentIndex === 0) {
-      router.push("/terms");
-      return;
-    }
+      if (currentIndex === 0) {
+        if (onFirstStepBack) {
+          onFirstStepBack();
+        } else {
+          router.push("/terms");
+        }
+        return;
+      }
 
-    if (currentIndex > 0) {
-      goToStep(STEP_ORDER[currentIndex - 1]);
-    }
-  }, [wizardData.currentStep, goToStep, router]);
+      if (currentIndex > 0) {
+        goToStep(STEP_ORDER[currentIndex - 1]);
+      }
+    },
+    [wizardData.currentStep, goToStep, router]
+  );
 
   const resetWizard = React.useCallback(() => {
     try {

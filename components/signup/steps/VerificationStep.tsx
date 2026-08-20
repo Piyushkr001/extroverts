@@ -277,6 +277,7 @@ export function VerificationStep({
 
             {demoMode && (
               <div className="mt-1 flex items-center justify-center gap-1.5 rounded-lg border border-violet-500/20 bg-violet-500/5 px-2.5 py-1 text-[11px] font-medium text-violet-700 dark:text-violet-300">
+                <KeyRound className="h-3 w-3 text-violet-500" />
                 <span>Evaluation Demo Code:</span>
                 <strong className="font-mono font-bold">{DEMO_VALID_OTP}</strong>
               </div>
@@ -292,14 +293,6 @@ export function VerificationStep({
             )}
           </div>
 
-          {/* Demo Helper Notice */}
-          <div className="flex items-center justify-center gap-1.5 rounded-xl border border-violet-500/20 bg-violet-500/10 px-3 py-2 text-[11px] font-medium text-violet-800 dark:text-violet-200">
-            <KeyRound className="h-3.5 w-3.5 shrink-0 text-violet-600 dark:text-violet-400" />
-            <span>
-              Evaluation Demo Code:{" "}
-              <strong className="font-bold underline tracking-wider">{DEMO_VALID_OTP}</strong>
-            </span>
-          </div>
 
           {/* Action Button */}
           <Button

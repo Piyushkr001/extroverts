@@ -80,14 +80,14 @@ export function HeroContent() {
           <div className="flex size-5 items-center justify-center rounded-full bg-purple-500/10 text-purple-600 dark:bg-purple-400/10 dark:text-purple-300">
             <Users className="h-3 w-3" />
           </div>
-          <span>Verified Community</span>
+          <span>Community-Focused</span>
         </div>
 
         <div className="inline-flex items-center gap-1.5">
           <div className="flex size-5 items-center justify-center rounded-full bg-fuchsia-500/10 text-fuchsia-600 dark:bg-fuchsia-400/10 dark:text-fuchsia-300">
             <ShieldCheck className="h-3 w-3" />
           </div>
-          <span>Privacy Focused</span>
+          <span>Privacy-Conscious</span>
         </div>
       </div>
     </div>
