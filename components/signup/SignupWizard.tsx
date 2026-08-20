@@ -22,6 +22,7 @@ export function SignupWizard() {
     isHydrated,
     setIsSubmitting,
     setGlobalError,
+    setSimulateFailure,
     updateFormData,
     goNext,
     goBack,
@@ -115,6 +116,8 @@ export function SignupWizard() {
         <StepFourSocial
           initialData={formData}
           isSubmitting={isSubmitting}
+          simulateFailure={simulateFailure}
+          onToggleSimulateFailure={() => setSimulateFailure((prev) => !prev)}
           onFinalSubmit={handleFinalSubmit}
           onBack={goBack}
         />

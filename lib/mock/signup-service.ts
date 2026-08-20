@@ -38,7 +38,7 @@ export async function verifyOtpMock(
   email: string,
   otp: string,
   options?: { shouldFail?: boolean }
-): Promise<ServiceResponse<{ token: string }>> {
+): Promise<ServiceResponse<{ verified: boolean }>> {
   await sleep(1000);
 
   if (options?.shouldFail || otp === "000000") {
@@ -59,7 +59,7 @@ export async function verifyOtpMock(
     success: true,
     message: "Email verified successfully!",
     data: {
-      token: `mock_jwt_${Date.now()}`,
+      verified: true,
     },
   };
 }

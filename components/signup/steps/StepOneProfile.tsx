@@ -90,6 +90,7 @@ export function StepOneProfile({
             </div>
             <Input
               id="fullName"
+              maxLength={50}
               placeholder="e.g. Alex Johnson"
               className={cn(
                 "h-11 rounded-xl pl-9 text-sm",
@@ -155,19 +156,21 @@ export function StepOneProfile({
 
         {/* Gender / Pronouns */}
         <div className="flex flex-col gap-2">
-          <Label className="text-xs font-semibold text-zinc-700 dark:text-zinc-300">
+          <Label id="gender-label" className="text-xs font-semibold text-zinc-700 dark:text-zinc-300">
             Gender / Pronouns <span className="text-violet-600 dark:text-violet-400">*</span>
           </Label>
-          <div className="flex flex-wrap gap-1.5">
+          <div role="radiogroup" aria-labelledby="gender-label" className="flex flex-wrap gap-1.5">
             {GENDER_OPTIONS.map((option) => {
               const isSelected = selectedGender === option.value;
               return (
                 <button
                   key={option.value}
                   type="button"
+                  role="radio"
+                  aria-checked={isSelected}
                   onClick={() => setValue("gender", option.value, { shouldValidate: true })}
                   className={cn(
-                    "rounded-xl px-3 py-2 text-xs font-medium transition-all duration-200 cursor-pointer",
+                    "rounded-xl px-3 py-2 text-xs font-medium transition-all duration-200 cursor-pointer focus-visible:ring-2 focus-visible:ring-violet-500 outline-none",
                     isSelected
                       ? "border border-violet-500/40 bg-linear-to-r from-violet-600/15 to-fuchsia-600/15 text-violet-800 ring-2 ring-violet-500/20 dark:border-violet-400/40 dark:text-violet-200"
                       : "border border-zinc-200/80 bg-zinc-50/80 text-zinc-600 hover:bg-zinc-100 dark:border-zinc-800 dark:bg-zinc-800/60 dark:text-zinc-300 dark:hover:bg-zinc-800"

@@ -91,7 +91,7 @@ export default function Navbar() {
           <ModeToggle />
           <Button
             nativeButton={false}
-            render={<Link href="/signup" />}
+            render={<Link href="/terms" />}
             className={cn("rounded-full px-5", GRADIENT_BTN_CLASS)}
           >
             Sign Up
@@ -166,7 +166,7 @@ export default function Navbar() {
                   nativeButton={false}
                   render={
                     <Link
-                      href="/signup"
+                      href="/terms"
                       onClick={() => setIsOpen(false)}
                     />
                   }

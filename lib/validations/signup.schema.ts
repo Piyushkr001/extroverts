@@ -36,7 +36,7 @@ export const stepOneProfileSchema = z.object({
     })
     .int("Age must be a whole number")
     .min(18, "You must be at least 18 years old to join Extroverts")
-    .max(100, "Please enter a valid age"),
+    .max(120, "Enter a valid age"),
   gender: z
     .string()
     .trim()

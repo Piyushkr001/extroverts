@@ -35,10 +35,10 @@ export default function Footer() {
             Terms & Conditions
           </Link>
           <Link
-            href="/signup"
+            href="/terms"
             className="transition-colors hover:text-zinc-900 dark:hover:text-zinc-100"
           >
-            Signup Wizard
+            Get Started
           </Link>
         </div>
       </div>

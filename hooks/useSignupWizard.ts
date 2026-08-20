@@ -31,118 +31,184 @@ const STEP_ORDER: WizardStepKey[] = [
   "success",
 ];
 
-function getStoredState() {
-  if (typeof window === "undefined") {
-    return {
-      currentStep: "verification" as WizardStepKey,
-      completedSteps: [] as WizardStepKey[],
-      formData: INITIAL_FORM_DATA,
-    };
+// Normalize restored step so incomplete previous steps cannot be bypassed
+function normalizeAllowedStep(
+  requestedStep: WizardStepKey,
+  data: SignupFormData
+): WizardStepKey {
+  if (!data.isEmailVerified) {
+    return "verification";
   }
+  if (!data.fullName || !data.age || !data.gender) {
+    return requestedStep === "verification" ? "verification" : "step1_profile";
+  }
+  if (!data.state || !data.city || !data.collegeOrWorkplace) {
+    if (requestedStep === "verification" || requestedStep === "step1_profile") {
+      return requestedStep;
+    }
+    return "step2_location";
+  }
+  if (!data.vibes || data.vibes.length < 2 || !data.hangoutStyle) {
+    if (
+      requestedStep === "verification" ||
+      requestedStep === "step1_profile" ||
+      requestedStep === "step2_location"
+    ) {
+      return requestedStep;
+    }
+    return "step3_vibes";
+  }
+  if (!data.instagramHandle || !data.bio || !data.availability) {
+    if (
+      requestedStep === "verification" ||
+      requestedStep === "step1_profile" ||
+      requestedStep === "step2_location" ||
+      requestedStep === "step3_vibes"
+    ) {
+      return requestedStep;
+    }
+    return "step4_social";
+  }
+  return requestedStep;
+}
+
+interface StoredWizardData {
+  currentStep: WizardStepKey;
+  completedSteps: WizardStepKey[];
+  formData: SignupFormData;
+}
+
+const DEFAULT_WIZARD_DATA: StoredWizardData = {
+  currentStep: "verification",
+  completedSteps: [],
+  formData: INITIAL_FORM_DATA,
+};
+
+let currentMemoryState: StoredWizardData = DEFAULT_WIZARD_DATA;
+let isInitializedFromStorage = false;
+const listeners = new Set<() => void>();
+
+function initStorageOnce() {
+  if (isInitializedFromStorage || typeof window === "undefined") return;
+  isInitializedFromStorage = true;
   try {
     const saved = sessionStorage.getItem(STORAGE_KEY);
     if (saved) {
       const parsed = JSON.parse(saved);
-      return {
-        currentStep: (parsed.currentStep && STEP_ORDER.includes(parsed.currentStep)
-          ? parsed.currentStep
-          : "verification") as WizardStepKey,
-        completedSteps: Array.isArray(parsed.completedSteps)
-          ? parsed.completedSteps
-          : [],
-        formData: parsed.formData
-          ? { ...INITIAL_FORM_DATA, ...parsed.formData }
-          : INITIAL_FORM_DATA,
-      };
+      if (parsed && typeof parsed === "object") {
+        const parsedFormData: SignupFormData = {
+          ...INITIAL_FORM_DATA,
+          ...(parsed.formData || {}),
+        };
+        const rawStep = STEP_ORDER.includes(parsed.currentStep)
+          ? (parsed.currentStep as WizardStepKey)
+          : "verification";
+        const safeStep = normalizeAllowedStep(rawStep, parsedFormData);
+
+        currentMemoryState = {
+          currentStep: safeStep,
+          completedSteps: Array.isArray(parsed.completedSteps)
+            ? parsed.completedSteps
+            : [],
+          formData: parsedFormData,
+        };
+      }
     }
   } catch {
-    // Ignore parse error
+    try {
+      sessionStorage.removeItem(STORAGE_KEY);
+    } catch {
+      // ignore
+    }
   }
-  return {
-    currentStep: "verification" as WizardStepKey,
-    completedSteps: [] as WizardStepKey[],
-    formData: INITIAL_FORM_DATA,
-  };
+}
+
+function updateStore(nextState: StoredWizardData) {
+  currentMemoryState = nextState;
+  try {
+    if (typeof window !== "undefined") {
+      sessionStorage.setItem(STORAGE_KEY, JSON.stringify(nextState));
+    }
+  } catch {
+    // ignore
+  }
+  listeners.forEach((l) => l());
 }
 
 export function useSignupWizard() {
   const router = useRouter();
 
-  const [state, setState] = React.useState(getStoredState);
+  // useSyncExternalStore guarantees 100% hydration matching without cascading setState in effects
+  const wizardData = React.useSyncExternalStore(
+    (callback) => {
+      listeners.add(callback);
+      return () => {
+        listeners.delete(callback);
+      };
+    },
+    () => {
+      initStorageOnce();
+      return currentMemoryState;
+    },
+    () => DEFAULT_WIZARD_DATA
+  );
+
+  const isHydrated = React.useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false
+  );
+
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [globalError, setGlobalError] = React.useState<string | null>(null);
   const [simulateFailure, setSimulateFailure] = React.useState(false);
 
-  // Sync to sessionStorage
-  const persistState = React.useCallback(
-    (newState: {
-      currentStep: WizardStepKey;
-      completedSteps: WizardStepKey[];
-      formData: SignupFormData;
-    }) => {
-      try {
-        if (typeof window !== "undefined") {
-          sessionStorage.setItem(STORAGE_KEY, JSON.stringify(newState));
-        }
-      } catch {
-        // Ignore write error
-      }
+  const updateFormData = React.useCallback(
+    (updates: Partial<SignupFormData>) => {
+      const next: StoredWizardData = {
+        ...currentMemoryState,
+        formData: { ...currentMemoryState.formData, ...updates },
+      };
+      updateStore(next);
     },
     []
   );
 
-  const updateFormData = React.useCallback(
-    (updates: Partial<SignupFormData>) => {
-      setState((prev) => {
-        const next = {
-          ...prev,
-          formData: { ...prev.formData, ...updates },
-        };
-        persistState(next);
-        return next;
-      });
-    },
-    [persistState]
-  );
-
   const markStepComplete = React.useCallback(
     (step: WizardStepKey) => {
-      setState((prev) => {
-        if (prev.completedSteps.includes(step)) return prev;
-        const next = {
-          ...prev,
-          completedSteps: [...prev.completedSteps, step],
-        };
-        persistState(next);
-        return next;
-      });
+      if (currentMemoryState.completedSteps.includes(step)) return;
+      const next: StoredWizardData = {
+        ...currentMemoryState,
+        completedSteps: [...currentMemoryState.completedSteps, step],
+      };
+      updateStore(next);
     },
-    [persistState]
+    []
   );
 
   const goToStep = React.useCallback(
     (nextStep: WizardStepKey) => {
       setGlobalError(null);
-      setState((prev) => {
-        const next = { ...prev, currentStep: nextStep };
-        persistState(next);
-        return next;
-      });
+      const next: StoredWizardData = {
+        ...currentMemoryState,
+        currentStep: nextStep,
+      };
+      updateStore(next);
     },
-    [persistState]
+    []
   );
 
   const goNext = React.useCallback(() => {
-    const currentIndex = STEP_ORDER.indexOf(state.currentStep);
+    const currentIndex = STEP_ORDER.indexOf(wizardData.currentStep);
     if (currentIndex < STEP_ORDER.length - 1) {
-      markStepComplete(state.currentStep);
+      markStepComplete(wizardData.currentStep);
       goToStep(STEP_ORDER[currentIndex + 1]);
     }
-  }, [state.currentStep, markStepComplete, goToStep]);
+  }, [wizardData.currentStep, markStepComplete, goToStep]);
 
   const goBack = React.useCallback(() => {
     setGlobalError(null);
-    const currentIndex = STEP_ORDER.indexOf(state.currentStep);
+    const currentIndex = STEP_ORDER.indexOf(wizardData.currentStep);
 
     if (currentIndex === 0) {
       router.push("/terms");
@@ -152,7 +218,7 @@ export function useSignupWizard() {
     if (currentIndex > 0) {
       goToStep(STEP_ORDER[currentIndex - 1]);
     }
-  }, [state.currentStep, goToStep, router]);
+  }, [wizardData.currentStep, goToStep, router]);
 
   const resetWizard = React.useCallback(() => {
     try {
@@ -162,17 +228,12 @@ export function useSignupWizard() {
     } catch {
       // ignore
     }
-    const initial = {
-      currentStep: "verification" as WizardStepKey,
-      completedSteps: [] as WizardStepKey[],
-      formData: INITIAL_FORM_DATA,
-    };
-    setState(initial);
+    updateStore(DEFAULT_WIZARD_DATA);
     setGlobalError(null);
   }, []);
 
   const getStepProgressNumber = React.useCallback((): number | null => {
-    switch (state.currentStep) {
+    switch (wizardData.currentStep) {
       case "step1_profile":
         return 1;
       case "step2_location":
@@ -184,16 +245,16 @@ export function useSignupWizard() {
       default:
         return null;
     }
-  }, [state.currentStep]);
+  }, [wizardData.currentStep]);
 
   return {
-    currentStep: state.currentStep,
-    completedSteps: state.completedSteps,
-    formData: state.formData,
+    currentStep: wizardData.currentStep,
+    completedSteps: wizardData.completedSteps,
+    formData: wizardData.formData,
     isSubmitting,
     globalError,
     simulateFailure,
-    isHydrated: true,
+    isHydrated,
     setIsSubmitting,
     setGlobalError,
     setSimulateFailure,

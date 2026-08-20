@@ -26,8 +26,10 @@ import { WizardHeader } from "../WizardHeader";
 import {
   emailVerificationSchema,
   EmailVerificationInput,
+  otpVerificationSchema,
 } from "@/lib/validations/signup.schema";
 import { sendOtpMock, verifyOtpMock, DEMO_VALID_OTP } from "@/lib/mock/signup-service";
+import { REGEXP_ONLY_DIGITS } from "input-otp";
 
 interface VerificationStepProps {
   initialEmail: string;
@@ -76,6 +78,7 @@ export function VerificationStep({
 
   // Handle email submission
   const handleEmailSubmit = async (data: EmailVerificationInput) => {
+    if (isSubmitting) return;
     setIsSubmitting(true);
     try {
       const response = await sendOtpMock(data.email, { shouldFail: simulateFail });
@@ -97,8 +100,15 @@ export function VerificationStep({
   // Handle OTP verification
   const handleOtpVerify = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
-    if (otpValue.length < 6) {
-      setOtpError("Please enter all 6 digits of the verification code.");
+    if (isSubmitting) return;
+
+    // Validate using Zod schema
+    const parseResult = otpVerificationSchema.safeParse({ otp: otpValue });
+    if (!parseResult.success) {
+      setOtpError(
+        parseResult.error.issues[0]?.message ||
+          "Please enter all 6 numeric digits of the verification code."
+      );
       return;
     }
 
@@ -236,7 +246,10 @@ export function VerificationStep({
               6-digit verification code
             </Label>
             <InputOTP
+              id="otp-input"
               maxLength={6}
+              pattern={REGEXP_ONLY_DIGITS}
+              inputMode="numeric"
               value={otpValue}
               onChange={(val) => {
                 setOtpValue(val);

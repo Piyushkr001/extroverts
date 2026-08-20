@@ -71,6 +71,13 @@ export function StepTwoLocation({
     setValue("collegeOrWorkplace", "", { shouldValidate: false });
   };
 
+  // Handle City Change -> Reset dependent College / Workplace
+  const handleCityChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const newCity = e.target.value;
+    setValue("city", newCity, { shouldValidate: true });
+    setValue("collegeOrWorkplace", "", { shouldValidate: false });
+  };
+
   const onSubmit = (data: StepTwoLocationInput) => {
     onSaveAndNext({
       state: data.state,
@@ -140,7 +147,7 @@ export function StepTwoLocation({
               id="city-select"
               disabled={!selectedState}
               value={selectedCity}
-              onChange={(e) => setValue("city", e.target.value, { shouldValidate: true })}
+              onChange={handleCityChange}
               className={cn(
                 "h-11 w-full rounded-xl border border-input bg-transparent pl-9 pr-8 text-sm transition-colors outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-input/30",
                 errors.city && "border-destructive focus-visible:ring-destructive/30"
@@ -177,6 +184,7 @@ export function StepTwoLocation({
             </div>
             <Input
               id="collegeOrWorkplace"
+              maxLength={80}
               placeholder="e.g. Symbiosis Pune or Google"
               className={cn(
                 "h-11 rounded-xl pl-9 text-sm",

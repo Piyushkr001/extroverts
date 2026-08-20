@@ -79,7 +79,7 @@ export function StepThreeVibes({
         {/* Vibe Selection Tags */}
         <div className="flex flex-col gap-2">
           <div className="flex items-center justify-between">
-            <Label className="text-xs font-semibold text-zinc-700 dark:text-zinc-300">
+            <Label id="vibes-label" className="text-xs font-semibold text-zinc-700 dark:text-zinc-300">
               Vibe Interests (min 2, max 6) <span className="text-violet-600 dark:text-violet-400">*</span>
             </Label>
             <span className="text-[11px] font-bold text-violet-600 dark:text-violet-400">
@@ -87,16 +87,19 @@ export function StepThreeVibes({
             </span>
           </div>
 
-          <div className="flex flex-wrap gap-2 pt-1">
+          <div role="group" aria-labelledby="vibes-label" className="flex flex-wrap gap-2 pt-1">
             {VIBE_OPTIONS.map((vibe) => {
               const isSelected = selectedVibes.includes(vibe.id);
               return (
                 <button
                   key={vibe.id}
                   type="button"
+                  role="checkbox"
+                  aria-checked={isSelected}
+                  aria-label={vibe.label}
                   onClick={() => toggleVibe(vibe.id)}
                   className={cn(
-                    "flex items-center gap-1.5 rounded-2xl px-3.5 py-2 text-xs font-semibold transition-all duration-200 cursor-pointer select-none",
+                    "flex items-center gap-1.5 rounded-2xl px-3.5 py-2 text-xs font-semibold transition-all duration-200 cursor-pointer select-none focus-visible:ring-2 focus-visible:ring-violet-500 outline-none",
                     isSelected
                       ? "border border-violet-500/40 bg-linear-to-r from-violet-600/15 via-purple-600/15 to-fuchsia-600/15 text-violet-900 shadow-xs ring-2 ring-violet-500/25 dark:border-violet-400/40 dark:text-violet-100"
                       : "border border-zinc-200/80 bg-zinc-50/80 text-zinc-700 hover:bg-zinc-100 dark:border-zinc-800 dark:bg-zinc-800/60 dark:text-zinc-300 dark:hover:bg-zinc-800"
@@ -118,19 +121,21 @@ export function StepThreeVibes({
 
         {/* Hangout Group Energy */}
         <div className="flex flex-col gap-2 pt-1">
-          <Label className="text-xs font-semibold text-zinc-700 dark:text-zinc-300">
+          <Label id="style-label" className="text-xs font-semibold text-zinc-700 dark:text-zinc-300">
             Preferred Hangout Group Size <span className="text-violet-600 dark:text-violet-400">*</span>
           </Label>
-          <div className="flex flex-col gap-2">
+          <div role="radiogroup" aria-labelledby="style-label" className="flex flex-col gap-2">
             {HANGOUT_STYLES.map((style) => {
               const isSelected = selectedStyle === style.value;
               return (
                 <button
                   key={style.value}
                   type="button"
+                  role="radio"
+                  aria-checked={isSelected}
                   onClick={() => setValue("hangoutStyle", style.value, { shouldValidate: true })}
                   className={cn(
-                    "flex items-center justify-between rounded-xl p-3 text-left text-xs font-medium transition-all duration-200 cursor-pointer",
+                    "flex items-center justify-between rounded-xl p-3 text-left text-xs font-medium transition-all duration-200 cursor-pointer focus-visible:ring-2 focus-visible:ring-violet-500 outline-none",
                     isSelected
                       ? "border border-violet-500/40 bg-violet-500/10 text-violet-900 ring-2 ring-violet-500/20 dark:border-violet-400/40 dark:bg-violet-400/10 dark:text-violet-200"
                       : "border border-zinc-200/80 bg-zinc-50/70 text-zinc-700 hover:bg-zinc-100 dark:border-zinc-800 dark:bg-zinc-800/60 dark:text-zinc-300 dark:hover:bg-zinc-800"

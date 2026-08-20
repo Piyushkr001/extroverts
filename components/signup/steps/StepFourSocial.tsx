@@ -8,6 +8,7 @@ import {
   Loader2,
   Sparkles,
   CheckCircle2,
+  Bug,
 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -27,6 +28,8 @@ import { AVAILABILITY_OPTIONS } from "@/lib/data/locations";
 interface StepFourSocialProps {
   initialData: SignupFormData;
   isSubmitting: boolean;
+  simulateFailure: boolean;
+  onToggleSimulateFailure: () => void;
   onFinalSubmit: (data: StepFourSocialInput) => void;
   onBack: () => void;
 }
@@ -34,6 +37,8 @@ interface StepFourSocialProps {
 export function StepFourSocial({
   initialData,
   isSubmitting,
+  simulateFailure,
+  onToggleSimulateFailure,
   onFinalSubmit,
   onBack,
 }: StepFourSocialProps) {
@@ -85,6 +90,7 @@ export function StepFourSocial({
             </div>
             <Input
               id="instagramHandle"
+              maxLength={30}
               placeholder="your_handle"
               className={cn(
                 "h-11 rounded-xl pl-9 text-sm",
@@ -116,12 +122,13 @@ export function StepFourSocial({
                   : "text-amber-600 dark:text-amber-400 font-semibold"
               )}
             >
-              {bioValue.length} / 180 chars
+              {Math.min(bioValue.length, 180)} / 180 chars
             </span>
           </div>
           <Textarea
             id="bio"
             rows={3}
+            maxLength={180}
             placeholder="Tell us what excites you, your favorite weekend plans, or your go-to weekend vibe..."
             className={cn(
               "rounded-xl text-sm leading-relaxed",
@@ -144,19 +151,25 @@ export function StepFourSocial({
 
         {/* Typical Availability */}
         <div className="flex flex-col gap-2">
-          <Label className="text-xs font-semibold text-zinc-700 dark:text-zinc-300">
+          <Label id="availability-label" className="text-xs font-semibold text-zinc-700 dark:text-zinc-300">
             Typical Availability <span className="text-violet-600 dark:text-violet-400">*</span>
           </Label>
-          <div className="flex flex-col gap-1.5">
+          <div
+            role="radiogroup"
+            aria-labelledby="availability-label"
+            className="flex flex-col gap-1.5"
+          >
             {AVAILABILITY_OPTIONS.map((item) => {
               const isSelected = selectedAvailability === item.value;
               return (
                 <button
                   key={item.value}
                   type="button"
+                  role="radio"
+                  aria-checked={isSelected}
                   onClick={() => setValue("availability", item.value, { shouldValidate: true })}
                   className={cn(
-                    "flex items-center justify-between rounded-xl p-2.5 text-left text-xs font-medium transition-all duration-200 cursor-pointer",
+                    "flex items-center justify-between rounded-xl p-2.5 text-left text-xs font-medium transition-all duration-200 cursor-pointer focus-visible:ring-2 focus-visible:ring-violet-500 outline-none",
                     isSelected
                       ? "border border-violet-500/40 bg-violet-500/10 text-violet-900 ring-2 ring-violet-500/20 dark:border-violet-400/40 dark:bg-violet-400/10 dark:text-violet-200"
                       : "border border-zinc-200/80 bg-zinc-50/70 text-zinc-700 hover:bg-zinc-100 dark:border-zinc-800 dark:bg-zinc-800/60 dark:text-zinc-300 dark:hover:bg-zinc-800"
@@ -194,6 +207,26 @@ export function StepFourSocial({
           )}
         </Button>
       </form>
+
+      {/* Evaluator Simulation Control (Failure State Testing) */}
+      <div className="mt-5 flex items-center justify-between border-t border-black/5 pt-3.5 text-[11px] text-zinc-400 dark:border-white/10">
+        <span className="flex items-center gap-1">
+          <Bug className="h-3 w-3" />
+          <span>Simulate Submission Failure:</span>
+        </span>
+        <button
+          type="button"
+          onClick={onToggleSimulateFailure}
+          className={cn(
+            "rounded-md px-2 py-0.5 text-[10px] font-bold uppercase transition-colors cursor-pointer",
+            simulateFailure
+              ? "bg-red-500 text-white"
+              : "bg-zinc-200 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300"
+          )}
+        >
+          {simulateFailure ? "ON (Failing)" : "OFF (Normal)"}
+        </button>
+      </div>
     </div>
   );
 }

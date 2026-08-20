@@ -116,7 +116,7 @@ export function SignupSuccess({ formData, onReset }: SignupSuccessProps) {
           render={<Link href="/" />}
           className="h-12 w-full rounded-xl bg-linear-to-r from-violet-600 via-purple-600 to-fuchsia-600 font-semibold text-white shadow-lg shadow-violet-500/25 transition-all hover:scale-[1.01] hover:shadow-xl hover:from-violet-700 hover:via-purple-700 hover:to-fuchsia-700"
         >
-          <span>Explore Extroverts Feed</span>
+          <span>Return to Home</span>
           <ArrowRight className="ml-2 size-4" />
         </Button>
 
