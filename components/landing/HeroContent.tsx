@@ -7,6 +7,8 @@ import { ArrowRight, Sparkles, Zap, Users, ShieldCheck } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { SparklesText } from "../ui/sparkles-text";
+import { AnimatedGradientText } from "../ui/animated-gradient-text";
 
 export function HeroContent() {
   return (
@@ -14,20 +16,37 @@ export function HeroContent() {
       {/* 1. Small Pill Badge */}
       <Badge
         variant="outline"
-        className="mb-6 inline-flex items-center gap-2 rounded-full border-violet-500/20 bg-violet-500/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-violet-700 backdrop-blur-md transition-all duration-300 hover:border-violet-500/30 hover:bg-violet-500/15 dark:border-violet-400/20 dark:bg-violet-400/10 dark:text-violet-300"
+        className="mb-6 inline-flex items-center gap-2 rounded-full border-violet-500/20 bg-violet-500/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider backdrop-blur-md transition-all duration-300 hover:border-violet-500/30 hover:bg-violet-500/15 dark:border-violet-400/20 dark:bg-violet-400/10"
       >
         <Sparkles className="h-3.5 w-3.5 text-violet-600 dark:text-violet-400" />
-        <span>Meet • Connect • Belong</span>
+        <AnimatedGradientText
+          colorFrom="#7c3aed"
+          colorTo="#c026d3"
+          speed={1}
+        >
+          Meet • Connect • Belong
+        </AnimatedGradientText>
       </Badge>
+      
 
       {/* 2. Main Hero Heading */}
-      <h1 className="text-4xl font-extrabold tracking-tight text-zinc-900 sm:text-5xl md:text-6xl lg:text-6xl xl:text-7xl leading-[1.08] dark:text-zinc-50">
+      {/* aria-label provides the full heading text for screen readers since SparklesText is aria-hidden below */}
+      <h1
+        aria-label="Discover people. Create connections. Make every moment count."
+        className="text-4xl font-extrabold tracking-tight text-zinc-900 sm:text-5xl md:text-6xl lg:text-6xl xl:text-7xl leading-[1.08] dark:text-zinc-50"
+      >
         Discover people. <br className="hidden sm:inline" />
-        Create connections. <br />
+        Create connections.
+      </h1>
+      {/* SparklesText renders a <div> internally — must live outside the <h1> */}
+      <SparklesText
+        aria-hidden="true"
+        className="mt-1 text-4xl font-extrabold tracking-tight sm:text-5xl md:text-6xl lg:text-6xl xl:text-7xl leading-[1.08]"
+      >
         <span className="bg-linear-to-r from-violet-600 via-purple-600 to-fuchsia-600 bg-clip-text text-transparent dark:from-violet-400 dark:via-purple-300 dark:to-fuchsia-400">
           Make every moment count.
         </span>
-      </h1>
+      </SparklesText>
 
       {/* 3. Supporting Description */}
       <p className="mt-6 max-w-xl text-base text-zinc-600 sm:text-lg sm:leading-relaxed dark:text-zinc-400">
